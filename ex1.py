@@ -6,6 +6,38 @@ import math
 ids = ["203703467", "204375687"]
 
 
+class Spot:
+
+    """ Coordinate object """
+
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __eq__(self, other):
+        if (self.x, self.y) == (other.x, other.y):
+            return True
+        return False
+
+    def __add__(self, other):
+        x, y = self.x + other.x, self.y + other.y
+        return Spot(x, y)
+
+    def __str__(self):
+        return '(' + str(self.x) + ', ' + str(self.y) + ')'
+
+
+class Direction:
+    """ """
+
+    def __init__(self, spot, char):
+        self.spot = spot
+        self.char = char
+
+    def __str__(self):
+        return self.char
+
+
 class SokobanProblem(search.Problem):
     """This class implements a sokoban problem"""
 
@@ -19,41 +51,58 @@ class SokobanProblem(search.Problem):
         state. The result would typically be a tuple, but if there are
         many actions, consider yielding them one at a time in an
         iterator, rather than building them all at once."""
-        player_index = Helper.findPlayer(state)
-        x, y = player_index[0], player_index[1]
-        left = Helper.canMove(state, x, y, x - 1, y)
-        right = Helper.canMove(state, x, y, x + 1, y)
-        up = Helper.canMove(state, x, y, x, y + 1)
-        down = Helper.canMove(state, x, y, x, y - 1)
-        actions = {'L': left, 'U': up, 'R': right, 'D': down}
-        return tuple(actions.values())
+        x, y = Helper.findPlayer(state)
+        actions = []
+        if Helper.canMove(state, x, y, x - 1, y):
+            actions.append('L')
+        if Helper.canMove(state, x, y, x + 1, y):
+            actions.append('R')
+        if Helper.canMove(state, x, y, x, y + 1):
+            actions.append('U')
+        if Helper.canMove(state, x, y, x, y - 1):
+            actions.append('D')
+        return tuple(actions)
 
     def result(self, state, action):
         """Return the state that results from executing the given
         action in the given state. The action must be one of
         self.actions(state)."""
-        player_index = Helper.findPlayer(state)
-        x, y = player_index[0], player_index[1]
+
+        x, y = Helper.findPlayer(state)
 
         new_state = ()
 
         return new_state
 
-
     def goal_test(self, state):
         """ Given a state, checks if this is the goal state.
          Returns True if it is, False otherwise."""
+
+        for s in state:
+            for w in s:
+                if w in [15, 20, 27, 35]:
+                    return False
+
+        return True
 
     def h(self, node):
         """ This is the heuristic. It gets a node (not a state,
         state can be accessed via node.state)
         and returns a goal distance estimate"""
+        pass
 
     """Feel free to add your own functions"""
 
 
 def create_sokoban_problem(game):
     return SokobanProblem(game)
+
+
+"""
+*******************************************************************************************************************
+My class for help
+*******************************************************************************************************************
+"""
 
 
 class Helper:
@@ -68,14 +117,20 @@ class Helper:
                 if w in (17, 37):
                     x = s.index(w)
                     y = state.index(s)
-                    return (x, y)
+                    return tuple(x, y)
 
     def canMove(self, state, x0, y0, x1, y1):
+        # need to check the none thing!
         if state[x1, y1] in (None, 99):
-            return 0
+            return False
         elif state[x1, y1] in (15, 35):
-            return Helper.canMove(state, x1, y1, x1 + (x1 - x0), y1 + (y1 - y0))
-        return 1
+            return Helper.checkStone(state, x1 + (x1 - x0), y1 + (y1 - y0))
+        return True
+
+    def checkStone(self, state, x2, y2):
+        if state[x2, y2] in [10, 20, 30]:
+            return True
+        return False
 
 # if state[x1, y1] in (99, None):
         #     return False
@@ -84,6 +139,25 @@ class Helper:
         #         return False
         #     return True
         # return True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
