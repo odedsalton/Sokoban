@@ -5,37 +5,89 @@ import math
 
 ids = ["203703467", "204375687"]
 
+"""
+*******************************************************************************************************************
+My class for help
+*******************************************************************************************************************
+"""
 
-class Spot:
 
-    """ Coordinate object """
+class Helper:
+    """Helper functions"""
 
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
+    def __init__(self):
+        pass
 
-    def __eq__(self, other):
-        if (self.x, self.y) == (other.x, other.y):
+    def findPlayer(self, state):
+        for s in state:
+            for w in s:
+                if w in (17, 37):
+                    x = s.index(w)
+                    y = state.index(s)
+                    return tuple(x, y)
+
+    def canMove(self, state, x0, y0, x1, y1):
+        if state[x1, y1]:
+            # if not in game coordinate
+            if state[x1, y1] == 99:
+                # if a wall
+                return False
+            elif state[x1, y1] in (15, 35):
+                # if there is box we need to check the next coordinate also
+                return Helper.checkStone(state, x1 + (x1 - x0), y1 + (y1 - y0))
             return True
         return False
 
-    def __add__(self, other):
-        x, y = self.x + other.x, self.y + other.y
-        return Spot(x, y)
+    def checkStone(self, state, x2, y2):
+        if state[x2, y2] in [10, 20, 30]:
+            return True
+        return False
 
-    def __str__(self):
-        return '(' + str(self.x) + ', ' + str(self.y) + ')'
+# if state[x1, y1] in (99, None):
+        #     return False
+        # elif state[x1, y1] in (15, 35):
+        #     if state[x2, y2] in (99, 35, 15, None):
+        #         return False
+        #     return True
+        # return True
 
 
-class Direction:
-    """ """
 
-    def __init__(self, spot, char):
-        self.spot = spot
-        self.char = char
+#
+# class Spot:
+#
+#     """ Coordinate object """
+#
+#     def __init__(self, x, y):
+#         self.x = x
+#         self.y = y
+#
+#     def __eq__(self, other):
+#         if (self.x, self.y) == (other.x, other.y):
+#             return True
+#         return False
+#
+#     def __add__(self, other):
+#         x, y = self.x + other.x, self.y + other.y
+#         return Spot(x, y)
+#
+#     def __str__(self):
+#         return '(' + str(self.x) + ', ' + str(self.y) + ')'
+#
+#
+# class Direction:
+#     """ """
+#
+#     def __init__(self, spot, char):
+#         self.spot = spot
+#         self.char = char
+#
+#     def __str__(self):
+#         return self.char
 
-    def __str__(self):
-        return self.char
+"""
+*******************************************************************************************************************
+"""
 
 
 class SokobanProblem(search.Problem):
@@ -98,47 +150,6 @@ def create_sokoban_problem(game):
     return SokobanProblem(game)
 
 
-"""
-*******************************************************************************************************************
-My class for help
-*******************************************************************************************************************
-"""
-
-
-class Helper:
-    """Helper functions"""
-
-    def __init__(self):
-        pass
-
-    def findPlayer(self, state):
-        for s in state:
-            for w in s:
-                if w in (17, 37):
-                    x = s.index(w)
-                    y = state.index(s)
-                    return tuple(x, y)
-
-    def canMove(self, state, x0, y0, x1, y1):
-        # need to check the none thing!
-        if state[x1, y1] in (None, 99):
-            return False
-        elif state[x1, y1] in (15, 35):
-            return Helper.checkStone(state, x1 + (x1 - x0), y1 + (y1 - y0))
-        return True
-
-    def checkStone(self, state, x2, y2):
-        if state[x2, y2] in [10, 20, 30]:
-            return True
-        return False
-
-# if state[x1, y1] in (99, None):
-        #     return False
-        # elif state[x1, y1] in (15, 35):
-        #     if state[x2, y2] in (99, 35, 15, None):
-        #         return False
-        #     return True
-        # return True
 
 
 
