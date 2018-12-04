@@ -66,8 +66,10 @@ def create_sokoban_problem(game):
     return SokobanProblem(game)
 
 
-""" 
-Our functions
+"""
+************************************************************************************************************************ 
+----------------------------------------------- More Functions ---------------------------------------------------------
+************************************************************************************************************************
 """
 
 
@@ -79,21 +81,19 @@ def findPlayer(state):
 
 
 def checkDirection(state, index, direction):
+    can_move = [10, 20, 30]
+    boxes = [15, 25, 35]
     index += direction
     # check if in bounds
     if index in (range(0, len(state)), range(0, len(state[0]))):
         # check if clear to move
-        if index in [10, 20, 30]:
+        if (index in can_move) or ((index in boxes) and (index+direction in can_move)):
             return True
-        # if theres a box we check the next index
-        if index in [15, 25, 35]:
-            return checkDirection(state, index, direction)
     return False
 
 
 def Move(state, player, direction):
     new_state = []
-        
     return tuple(new_state)
 
 
@@ -205,24 +205,6 @@ def Move(state, player, direction):
 #         if state[x2, y2] in [10, 20, 30]:
 #             return True
 #         return False
-
-
-"""
-*******************************************************************************************************************
-"""
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
