@@ -20,7 +20,7 @@ class SokobanProblem(search.Problem):
         many actions, consider yielding them one at a time in an
         iterator, rather than building them all at once."""
         player = findPlayer(state)
-        actions = {'R': (1, 0), 'U': (0, 1), 'L': (-1, 0), 'D': (0, -1)}
+        actions = {'U': (1, 0), 'R': (0, 1), 'D': (-1, 0), 'L': (0, -1)}
         for key, val in actions.items():
             if not checkDirection(state, player, val):
                 actions.pop(key)
@@ -31,11 +31,11 @@ class SokobanProblem(search.Problem):
         action in the given state. The action must be one of
         self.actions(state)."""
         direction = ()
-        if action is 'U':
+        if action is 'R':
             direction = (0, 1)
-        elif action is 'D':
-            direction = (0, -1)
         elif action is 'L':
+            direction = (0, -1)
+        elif action is 'D':
             direction = (-1, 0)
         else:
             direction = (1, 0)
@@ -76,8 +76,12 @@ def create_sokoban_problem(game):
 def findPlayer(state):
     for x, t in enumerate(state):
         for y, v in enumerate(t):
-            if y in (17, 27, 37):
+            if v in (17, 27, 37):
                 return x, y
+
+
+# def Dim(state):
+#     return len(state), len(state[0])
 
 
 def checkDirection(state, index, direction):
